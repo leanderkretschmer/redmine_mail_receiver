@@ -3,9 +3,9 @@ require_relative 'lib/mail_receiver'
 
 Redmine::Plugin.register :mail_receiver do
   name 'Mail Receiver Plugin'
-  author 'leanderkretschmer'
+  author 'Leander Kretschmer'
   description 'IMAP Mail Receiver + Reminder Scheduler for Redmine'
-  version '1.4.0'
+  version '1.4.1'
   url 'https://github.com/leanderkretschmer/redmine_mail_receiver'
   author_url 'https://github.com/leanderkretschmer'
 
