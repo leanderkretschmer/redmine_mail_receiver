@@ -1,11 +1,8 @@
 module MailReceiver
     class Scheduler
       def self.send_reminders
-        # ruft die eingebaute Redmine Reminder Logik auf
-        Mailer.reminders(
-          days: 7,
-          users: User.active
-        ).deliver
+        Rails.logger.info("[MailReceiver] Sending reminders...")
+        Mailer.reminders(days: 7, users: User.active).deliver_now
       end
     end
   end

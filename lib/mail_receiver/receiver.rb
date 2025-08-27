@@ -5,8 +5,9 @@ module MailReceiver
   class Receiver
     def self.process
       cfg = Setting.plugin_mail_receiver
-
       return if cfg['imap_host'].blank?
+
+      Rails.logger.info("[MailReceiver] Checking mailbox #{cfg['imap_host']}...")
 
       imap = Net::IMAP.new(
         cfg['imap_host'],
@@ -27,6 +28,8 @@ module MailReceiver
 
       imap.logout
       imap.disconnect
+    rescue => e
+      Rails.logger.error("[MailReceiver] IMAP error: #{e.message}")
     end
 
     def self.process_mail(mail)
@@ -51,7 +54,7 @@ module MailReceiver
         if user
           create_issue(user, subject, body)
         else
-          # Unbekannter Absender ohne Ticket-ID → verwerfen
+          Rails.logger.info("[MailReceiver] Ignoring mail from unknown user #{from}")
         end
       end
     end
@@ -59,6 +62,7 @@ module MailReceiver
     def self.add_journal(issue, user, body)
       issue.init_journal(user, body)
       issue.save
+      Rails.logger.info("[MailReceiver] Added journal to issue ##{issue.id} from #{user.mail}")
     end
 
     def self.create_issue(user, subject, body)
@@ -75,6 +79,7 @@ module MailReceiver
         description: body
       )
       issue.save
+      Rails.logger.info("[MailReceiver] Created new issue ##{issue.id} in project #{project.identifier}")
     end
 
     def self.create_silent_user(email, mail)
@@ -88,6 +93,7 @@ module MailReceiver
       user.random_password
       user.status = User::STATUS_REGISTERED
       user.save(validate: false)
+      Rails.logger.info("[MailReceiver] Created silent user #{email}")
       user
     end
   end
