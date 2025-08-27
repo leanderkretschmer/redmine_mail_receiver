@@ -1,2 +1,22 @@
 de:
+  mail_receiver:
+    settings:
+      incoming_mails: "Eingehende Mails"
+      imap_host: "IMAP-Host"
+      imap_port: "IMAP-Port"
+      imap_ssl: "SSL verwenden"
+      imap_user: "IMAP-Benutzer"
+      imap_password: "IMAP-Passwort"
+      interval_seconds: "Intervall (Sekunden)"
+      default_project: "Standard-Projektkennung"
+      no_ticket_mode: "Verhalten bei Mails ohne Ticket-ID"
+      no_ticket_comment: "Als Kommentar in Fallback-Ticket einfügen"
+      no_ticket_new: "Neues Ticket im Projekt erstellen"
+      fallback_issue_id: "Fallback-Ticket-ID"
+      reminder_mails: "Erinnerungs-Mails"
+      reminder_enabled: "Tägliche Erinnerungen aktivieren"
+      reminder_time: "Uhrzeit (HH:MM)"
+      mail_log: "Mail-Log"
+      log_empty: "Bisher keine Mails verarbeitet."
+      moved_to_inbox: "Keine Ticket-ID gefunden. Verschoben in Posteingang"
   notice_successful_update: "Einstellungen erfolgreich gespeichert"

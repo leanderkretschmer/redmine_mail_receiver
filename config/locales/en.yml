@@ -1,2 +1,22 @@
 en:
+  mail_receiver:
+    settings:
+      incoming_mails: "Incoming Mails"
+      imap_host: "IMAP Host"
+      imap_port: "IMAP Port"
+      imap_ssl: "Use SSL"
+      imap_user: "IMAP User"
+      imap_password: "IMAP Password"
+      interval_seconds: "Interval (seconds)"
+      default_project: "Default Project Identifier"
+      no_ticket_mode: "Behavior for mails without Ticket-ID"
+      no_ticket_comment: "Add as comment to fallback issue"
+      no_ticket_new: "Create new ticket in project"
+      fallback_issue_id: "Fallback Issue ID"
+      reminder_mails: "Reminder Mails"
+      reminder_enabled: "Enable daily reminders"
+      reminder_time: "Reminder time (HH:MM)"
+      mail_log: "Mail Log"
+      log_empty: "No mails processed yet."
+      moved_to_inbox: "No ticket id found. Moved to inbox"
   notice_successful_update: "Settings successfully updated"

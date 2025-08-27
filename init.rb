@@ -5,24 +5,31 @@ Redmine::Plugin.register :mail_receiver do
   name 'Mail Receiver Plugin'
   author 'leanderkretschmer'
   description 'IMAP Mail Receiver + Reminder Scheduler for Redmine'
-  version '1.3.1'
+  version '1.4.0'
   url 'https://github.com/leanderkretschmer/redmine_mail_receiver'
   author_url 'https://github.com/leanderkretschmer'
 
   settings default: {
+    # Incoming mail
     'imap_host' => '',
     'imap_port' => '993',
     'imap_ssl' => 'true',
     'imap_user' => '',
     'imap_password' => '',
-    'default_project' => '',
     'interval_seconds' => '300',
+    'default_project' => '',
+    'no_ticket_mode' => 'comment', # 'comment' oder 'new_ticket'
+    'fallback_issue_id' => '',
+
+    # Reminder
     'reminder_enabled' => 'false',
-    'reminder_time' => '09:00'
+    'reminder_time' => '09:00',
+
+    # Log
+    'mail_log' => []
   }, partial: 'mail_receiver_settings/edit'
 end
 
-# Scheduler nur im Produktionsmodus starten, nicht bei Rake-Tasks oder Migrations
 unless defined?(Rails::Console) || File.split($0).last == 'rake'
   Rails.application.config.after_initialize do
     MailReceiver.start

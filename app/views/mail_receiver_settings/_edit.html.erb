@@ -1,44 +1,43 @@
-<h2>Mail Receiver Settings</h2>
+<h2><%= l('mail_receiver.settings.incoming_mails') %></h2>
 
-<%= form_tag(plugin_settings_path(@plugin), method: :post) do %>
+<fieldset>
+  <legend><%= l('mail_receiver.settings.incoming_mails') %></legend>
   <table class="form">
+    <tr><th><%= l('mail_receiver.settings.imap_host') %></th><td><%= text_field_tag 'settings[imap_host]', @settings['imap_host'] %></td></tr>
+    <tr><th><%= l('mail_receiver.settings.imap_port') %></th><td><%= text_field_tag 'settings[imap_port]', @settings['imap_port'] %></td></tr>
+    <tr><th><%= l('mail_receiver.settings.imap_ssl') %></th><td><%= select_tag 'settings[imap_ssl]', options_for_select([['Ja','true'],['Nein','false']], @settings['imap_ssl']) %></td></tr>
+    <tr><th><%= l('mail_receiver.settings.imap_user') %></th><td><%= text_field_tag 'settings[imap_user]', @settings['imap_user'] %></td></tr>
+    <tr><th><%= l('mail_receiver.settings.imap_password') %></th><td><%= password_field_tag 'settings[imap_password]', @settings['imap_password'] %></td></tr>
+    <tr><th><%= l('mail_receiver.settings.interval_seconds') %></th><td><%= text_field_tag 'settings[interval_seconds]', @settings['interval_seconds'] %></td></tr>
+    <tr><th><%= l('mail_receiver.settings.default_project') %></th><td><%= text_field_tag 'settings[default_project]', @settings['default_project'] %></td></tr>
     <tr>
-      <th>IMAP Host</th>
-      <td><%= text_field_tag 'settings[imap_host]', @settings['imap_host'] %></td>
-    </tr>
-    <tr>
-      <th>IMAP Port</th>
-      <td><%= text_field_tag 'settings[imap_port]', @settings['imap_port'] %></td>
-    </tr>
-    <tr>
-      <th>SSL</th>
-      <td><%= select_tag 'settings[imap_ssl]', options_for_select([['true','true'],['false','false']], @settings['imap_ssl']) %></td>
-    </tr>
-    <tr>
-      <th>IMAP User</th>
-      <td><%= text_field_tag 'settings[imap_user]', @settings['imap_user'] %></td>
-    </tr>
-    <tr>
-      <th>IMAP Password</th>
-      <td><%= password_field_tag 'settings[imap_password]', @settings['imap_password'] %></td>
-    </tr>
-    <tr>
-      <th>Default Project Identifier</th>
-      <td><%= text_field_tag 'settings[default_project]', @settings['default_project'] %></td>
-    </tr>
-    <tr>
-      <th>Interval (seconds)</th>
-      <td><%= text_field_tag 'settings[interval_seconds]', @settings['interval_seconds'] %></td>
-    </tr>
-    <tr>
-      <th>Enable Daily Reminder</th>
-      <td><%= check_box_tag 'settings[reminder_enabled]', 'true', @settings['reminder_enabled'] == 'true' %></td>
-    </tr>
-    <tr>
-      <th>Reminder Time (HH:MM)</th>
-      <td><%= text_field_tag 'settings[reminder_time]', @settings['reminder_time'] %></td>
+      <th><%= l('mail_receiver.settings.no_ticket_mode') %></th>
+      <td>
+        <%= radio_button_tag 'settings[no_ticket_mode]', 'comment', @settings['no_ticket_mode'] == 'comment' %> <%= l('mail_receiver.settings.no_ticket_comment') %>
+        <%= text_field_tag 'settings[fallback_issue_id]', @settings['fallback_issue_id'], placeholder: l('mail_receiver.settings.fallback_issue_id') %><br>
+        <%= radio_button_tag 'settings[no_ticket_mode]', 'new_ticket', @settings['no_ticket_mode'] == 'new_ticket' %> <%= l('mail_receiver.settings.no_ticket_new') %>
+      </td>
     </tr>
   </table>
+</fieldset>
 
-  <%= submit_tag l(:button_save) %>
-<% end %>
+<fieldset>
+  <legend><%= l('mail_receiver.settings.reminder_mails') %></legend>
+  <table class="form">
+    <tr><th><%= l('mail_receiver.settings.reminder_enabled') %></th><td><%= check_box_tag 'settings[reminder_enabled]', 'true', @settings['reminder_enabled'] == 'true' %></td></tr>
+    <tr><th><%= l('mail_receiver.settings.reminder_time') %></th><td><%= text_field_tag 'settings[reminder_time]', @settings['reminder_time'] %></td></tr>
+  </table>
+</fieldset>
+
+<fieldset>
+  <legend><%= l('mail_receiver.settings.mail_log') %></legend>
+  <div style="background:#f9f9f9; border:1px solid #ccc; padding:5px; max-height:200px; overflow:auto;">
+    <% if (@settings['mail_log'] || []).empty? %>
+      <div><%= l('mail_receiver.settings.log_empty') %></div>
+    <% else %>
+      <% (@settings['mail_log'] || []).reverse.each do |line| %>
+        <div><%= line %></div>
+      <% end %>
+    <% end %>
+  </div>
+</fieldset>
