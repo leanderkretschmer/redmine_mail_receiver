@@ -1,0 +1,44 @@
+<h2>Mail Receiver Settings</h2>
+
+<%= form_tag(plugin_settings_path(@plugin), method: :post) do %>
+  <table class="form">
+    <tr>
+      <th>IMAP Host</th>
+      <td><%= text_field_tag 'settings[imap_host]', @settings['imap_host'] %></td>
+    </tr>
+    <tr>
+      <th>IMAP Port</th>
+      <td><%= text_field_tag 'settings[imap_port]', @settings['imap_port'] %></td>
+    </tr>
+    <tr>
+      <th>SSL</th>
+      <td><%= select_tag 'settings[imap_ssl]', options_for_select([['true','true'],['false','false']], @settings['imap_ssl']) %></td>
+    </tr>
+    <tr>
+      <th>IMAP User</th>
+      <td><%= text_field_tag 'settings[imap_user]', @settings['imap_user'] %></td>
+    </tr>
+    <tr>
+      <th>IMAP Password</th>
+      <td><%= password_field_tag 'settings[imap_password]', @settings['imap_password'] %></td>
+    </tr>
+    <tr>
+      <th>Default Project Identifier</th>
+      <td><%= text_field_tag 'settings[default_project]', @settings['default_project'] %></td>
+    </tr>
+    <tr>
+      <th>Interval (seconds)</th>
+      <td><%= text_field_tag 'settings[interval_seconds]', @settings['interval_seconds'] %></td>
+    </tr>
+    <tr>
+      <th>Enable Daily Reminder</th>
+      <td><%= check_box_tag 'settings[reminder_enabled]', 'true', @settings['reminder_enabled'] == 'true' %></td>
+    </tr>
+    <tr>
+      <th>Reminder Time (HH:MM)</th>
+      <td><%= text_field_tag 'settings[reminder_time]', @settings['reminder_time'] %></td>
+    </tr>
+  </table>
+
+  <%= submit_tag l(:button_save) %>
+<% end %>
