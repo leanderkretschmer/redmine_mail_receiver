@@ -5,7 +5,7 @@ Redmine::Plugin.register :mail_receiver do
   name 'Mail Receiver Plugin'
   author 'leanderkretschmer'
   description 'IMAP Mail Receiver + Reminder Scheduler for Redmine'
-  version '1.4.0'
+  version '1.6.0'
   url 'https://github.com/leanderkretschmer/redmine_mail_receiver'
   author_url 'https://github.com/leanderkretschmer'
 
@@ -28,6 +28,11 @@ Redmine::Plugin.register :mail_receiver do
     # Log
     'mail_log' => []
   }, partial: 'mail_receiver_settings/edit'
+end
+
+# Routes für das Plugin
+Rails.application.routes.draw do
+  post 'plugin_settings/mail_receiver/send_test_mail', to: 'mail_receiver_settings#send_test_mail', as: 'send_test_mail_plugin_settings'
 end
 
 unless defined?(Rails::Console) || File.split($0).last == 'rake'

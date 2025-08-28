@@ -30,6 +30,22 @@
 </fieldset>
 
 <fieldset>
+  <legend><%= l('mail_receiver.settings.test_mails') %></legend>
+  <table class="form">
+    <tr>
+      <th><%= l('mail_receiver.settings.test_email') %></th>
+      <td>
+        <%= form_tag send_test_mail_plugin_settings_path(id: 'mail_receiver'), method: :post, style: 'display: inline;' do %>
+          <%= text_field_tag :test_email, nil, placeholder: l('mail_receiver.settings.test_email_placeholder'), style: 'width: 300px;' %>
+          <%= submit_tag l('mail_receiver.settings.send_test_mail'), class: 'button-positive' %>
+        <% end %>
+        <p class="help"><%= l('mail_receiver.settings.test_mail_help') %></p>
+      </td>
+    </tr>
+  </table>
+</fieldset>
+
+<fieldset>
   <legend><%= l('mail_receiver.settings.mail_log') %></legend>
   <div style="background:#f9f9f9; border:1px solid #ccc; padding:5px; max-height:200px; overflow:auto;">
     <% if (@settings['mail_log'] || []).empty? %>

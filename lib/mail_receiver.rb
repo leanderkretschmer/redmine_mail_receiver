@@ -1,6 +1,7 @@
 require 'rufus-scheduler'
 require_relative 'mail_receiver/receiver'
 require_relative 'mail_receiver/scheduler'
+require_relative 'mail_receiver/test_mailer'
 
 module MailReceiver
   def self.start
