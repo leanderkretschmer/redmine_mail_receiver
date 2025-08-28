@@ -35,7 +35,7 @@
     <tr>
       <th><%= l('mail_receiver.settings.test_email') %></th>
       <td>
-        <%= form_tag send_test_mail_plugin_settings_path(id: 'mail_receiver'), method: :post, style: 'display: inline;' do %>
+        <%= form_tag '/plugin_settings/mail_receiver/send_test_mail', method: :post, style: 'display: inline;' do %>
           <%= text_field_tag :test_email, nil, placeholder: l('mail_receiver.settings.test_email_placeholder'), style: 'width: 300px;' %>
           <%= submit_tag l('mail_receiver.settings.send_test_mail'), class: 'button-positive' %>
         <% end %>
