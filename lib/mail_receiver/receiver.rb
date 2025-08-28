@@ -7,7 +7,11 @@ module MailReceiver
       cfg = Setting.plugin_mail_receiver
       return if cfg['imap_host'].blank?
 
-      imap = Net::IMAP.new(cfg['imap_host'], cfg['imap_port'].to_i, cfg['imap_ssl'] == 'true')
+      imap = Net::IMAP.new(
+        cfg['imap_host'], 
+        port: cfg['imap_port'].to_i, 
+        ssl: cfg['imap_ssl'] == 'true'
+      )
       imap.login(cfg['imap_user'], cfg['imap_password'])
       imap.select('INBOX')
 
