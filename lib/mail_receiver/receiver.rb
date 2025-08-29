@@ -26,6 +26,72 @@ module MailReceiver
       imap.disconnect
     rescue => e
       Rails.logger.error("[MailReceiver] IMAP error: #{e.message}")
+      add_detailed_log("IMAP error: #{e.message}")
+    end
+    
+    def self.process_manual(count = 10)
+      cfg = Setting.plugin_mail_receiver
+      return { success: false, error: 'IMAP not configured' } if cfg['imap_host'].blank?
+
+      add_detailed_log("Starting manual import for #{count} emails")
+      
+      begin
+        imap = Net::IMAP.new(
+          cfg['imap_host'], 
+          port: cfg['imap_port'].to_i, 
+          ssl: cfg['imap_ssl'] == 'true'
+        )
+        add_detailed_log("Connected to IMAP server: #{cfg['imap_host']}:#{cfg['imap_port']}")
+        
+        imap.login(cfg['imap_user'], cfg['imap_password'])
+        add_detailed_log("Logged in as: #{cfg['imap_user']}")
+        
+        imap.select('INBOX')
+        add_detailed_log("Selected INBOX")
+
+        # Hole alle ungelesenen E-Mails
+        unseen_messages = imap.search(['UNSEEN'])
+        add_detailed_log("Found #{unseen_messages.length} unseen messages")
+        
+        # Begrenze auf die gewünschte Anzahl
+        messages_to_process = unseen_messages.first(count)
+        processed_count = 0
+        
+        messages_to_process.each_with_index do |msg_id, index|
+          add_detailed_log("Processing message #{index + 1}/#{messages_to_process.length} (ID: #{msg_id})")
+          
+          begin
+            msg = imap.fetch(msg_id, 'RFC822')[0].attr['RFC822']
+            mail = Mail.read_from_string(msg)
+            
+            add_detailed_log("  From: #{mail.from&.first || 'Unknown'}")
+            add_detailed_log("  Subject: #{mail.subject || 'No subject'}")
+            
+            handle_mail(mail)
+            imap.store(msg_id, "+FLAGS", [:Seen])
+            
+            processed_count += 1
+            add_detailed_log("  ✓ Successfully processed")
+          rescue => e
+            add_detailed_log("  ✗ Error processing message: #{e.message}")
+            Rails.logger.error("[MailReceiver] Error processing message #{msg_id}: #{e.message}")
+          end
+        end
+
+        imap.logout
+        imap.disconnect
+        add_detailed_log("Manual import completed. Processed #{processed_count}/#{messages_to_process.length} messages")
+        
+        return { 
+          success: true, 
+          processed: processed_count, 
+          total: messages_to_process.length 
+        }
+      rescue => e
+        add_detailed_log("Manual import failed: #{e.message}")
+        Rails.logger.error("[MailReceiver] Manual import error: #{e.message}")
+        return { success: false, error: e.message }
+      end
     end
 
     def self.handle_mail(mail)
@@ -97,6 +163,13 @@ module MailReceiver
       log << "[#{Time.now.strftime('%Y-%m-%d %H:%M:%S')}] #{message}"
       log = log.last(50) # nur die letzten 50 Einträge behalten
       Setting.plugin_mail_receiver = Setting.plugin_mail_receiver.merge('mail_log' => log)
+    end
+    
+    def self.add_detailed_log(message)
+      log = Setting.plugin_mail_receiver['detailed_log'] || []
+      log << "[#{Time.now.strftime('%Y-%m-%d %H:%M:%S.%L')}] #{message}"
+      log = log.last(200) # nur die letzten 200 Einträge behalten
+      Setting.plugin_mail_receiver = Setting.plugin_mail_receiver.merge('detailed_log' => log)
     end
     
     private

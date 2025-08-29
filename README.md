@@ -13,6 +13,22 @@
 3. Redmine neu starten
 4. Einstellungen unter Administration → Plugins → Mail Receiver konfigurieren
 
+## Neue Features in Version 1.7.0
+
+### Manueller Import
+- Neuer Bereich in den Plugin-Einstellungen für manuellen Import
+- Eingabefeld für Anzahl der zu importierenden E-Mails (1-100)
+- Button zum Starten des manuellen Imports
+- Detailliertes Logging des Import-Prozesses
+- Perfekt für Tests und Debugging
+
+### Erweitertes Logging
+- Neuer "Erweitertes Log" Bereich in den Einstellungen
+- Detaillierte Protokollierung aller Import-Schritte
+- Kontinuierliche Aktualisierung während des Imports
+- Zeigt Verbindungsstatus, E-Mail-Details und Verarbeitungsergebnisse
+- Monospace-Font für bessere Lesbarkeit
+
 ## Neue Features in Version 1.5.0
 
 ### Verbesserte Reminder-Funktion
@@ -38,3 +54,9 @@
 - **E-Mail-Adresse**: Adresse für Testmail eingeben
 - **Testmail senden**: Button zum Senden einer Testmail
 - Die Testmail wird über die konfigurierte Redmine E-Mail-Einstellung gesendet
+
+### Manueller Import-Einstellungen
+- **Aktivieren**: Checkbox zum Aktivieren der manuellen Import-Funktion
+- **Standard-Anzahl**: Standard-Anzahl der zu importierenden E-Mails
+- **Import starten**: Button zum Starten des manuellen Imports mit konfigurierbarer Anzahl
+- **Erweitertes Log**: Detaillierte Protokollierung aller Import-Schritte

@@ -44,6 +44,33 @@ class MailReceiverSettingsController < ApplicationController
     redirect_to plugin_settings_path(id: 'mail_receiver')
   end
   
+  def manual_import
+    count = params[:import_count].to_i
+    
+    if count <= 0 || count > 100
+      flash[:error] = l('mail_receiver.manual_import.invalid_count')
+      redirect_to plugin_settings_path(id: 'mail_receiver')
+      return
+    end
+    
+    begin
+      # Führe manuellen Import durch
+      result = MailReceiver::Receiver.process_manual(count)
+      
+      if result[:success]
+        flash[:notice] = l('mail_receiver.manual_import.success', count: result[:processed], total: result[:total])
+      else
+        flash[:error] = l('mail_receiver.manual_import.failed', error: result[:error])
+      end
+    rescue => e
+      Rails.logger.error("[MailReceiver] Error during manual import: #{e.message}")
+      add_log_entry("Error during manual import: #{e.message}")
+      flash[:error] = l('mail_receiver.manual_import.error', error: e.message)
+    end
+    
+    redirect_to plugin_settings_path(id: 'mail_receiver')
+  end
+  
   private
   
   def add_log_entry(message)

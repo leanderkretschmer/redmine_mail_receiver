@@ -30,6 +30,24 @@
 </fieldset>
 
 <fieldset>
+  <legend><%= l('mail_receiver.settings.manual_import') %></legend>
+  <table class="form">
+    <tr><th><%= l('mail_receiver.settings.manual_import_enabled') %></th><td><%= check_box_tag 'settings[manual_import_enabled]', 'true', @settings['manual_import_enabled'] == 'true' %></td></tr>
+    <tr><th><%= l('mail_receiver.settings.manual_import_count') %></th><td><%= text_field_tag 'settings[manual_import_count]', @settings['manual_import_count'] %></td></tr>
+    <tr>
+      <th><%= l('mail_receiver.settings.manual_import_action') %></th>
+      <td>
+        <%= form_tag '/plugin_settings/mail_receiver/manual_import', method: :post, style: 'display: inline;' do %>
+          <%= text_field_tag :import_count, @settings['manual_import_count'], placeholder: l('mail_receiver.settings.manual_import_count_placeholder'), style: 'width: 100px;' %>
+          <%= submit_tag l('mail_receiver.settings.start_manual_import'), class: 'button-positive' %>
+        <% end %>
+        <p class="help"><%= l('mail_receiver.settings.manual_import_help') %></p>
+      </td>
+    </tr>
+  </table>
+</fieldset>
+
+<fieldset>
   <legend><%= l('mail_receiver.settings.test_mails') %></legend>
   <table class="form">
     <tr>
@@ -56,4 +74,17 @@
       <% end %>
     <% end %>
   </div>
+  
+  <details style="margin-top: 10px;">
+    <summary style="cursor: pointer; font-weight: bold; color: #666;"><%= l('mail_receiver.settings.detailed_log') %></summary>
+    <div style="background:#f5f5f5; border:1px solid #ddd; padding:5px; max-height:300px; overflow:auto; margin-top: 5px; font-family: monospace; font-size: 11px;">
+      <% if (@settings['detailed_log'] || []).empty? %>
+        <div><%= l('mail_receiver.settings.detailed_log_empty') %></div>
+      <% else %>
+        <% (@settings['detailed_log'] || []).reverse.each do |line| %>
+          <div><%= line %></div>
+        <% end %>
+      <% end %>
+    </div>
+  </details>
 </fieldset>
