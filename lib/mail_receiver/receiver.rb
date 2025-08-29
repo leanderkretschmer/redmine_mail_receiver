@@ -30,7 +30,7 @@ module MailReceiver
 
     def self.handle_mail(mail)
       subject = mail.subject.to_s
-      body = mail.body.decoded
+      body = extract_mail_body(mail)
       from = mail.from.first.downcase
       user = User.find_by_mail(from)
       ticket_id = subject[/\[#(\d+)\]/, 1]
@@ -97,6 +97,125 @@ module MailReceiver
       log << "[#{Time.now.strftime('%Y-%m-%d %H:%M:%S')}] #{message}"
       log = log.last(50) # nur die letzten 50 Einträge behalten
       Setting.plugin_mail_receiver = Setting.plugin_mail_receiver.merge('mail_log' => log)
+    end
+    
+    private
+    
+    def self.extract_mail_body(mail)
+      # Versuche zuerst den Text-Teil zu finden
+      content = nil
+      
+      if mail.multipart?
+        # Suche nach text/plain Teil
+        text_part = mail.text_part
+        if text_part
+          content = text_part.body.decoded
+        else
+          # Suche nach text/html Teil und konvertiere zu Text
+          html_part = mail.html_part
+          if html_part
+            content = html_to_text(html_part.body.decoded)
+          else
+            # Fallback: durchlaufe alle Teile
+            mail.parts.each do |part|
+              if part.content_type && part.content_type.start_with?('text/plain')
+                content = part.body.decoded
+                break
+              elsif part.content_type && part.content_type.start_with?('text/html')
+                content = html_to_text(part.body.decoded)
+                break
+              end
+            end
+          end
+        end
+      else
+        # Wenn keine multipart E-Mail, versuche den Body direkt zu dekodieren
+        if mail.body
+          content = mail.body.decoded
+          # Prüfe ob es HTML ist
+          if content.include?('<html') || content.include?('<body')
+            content = html_to_text(content)
+          end
+        else
+          # Fallback
+          content = mail.text_part ? mail.text_part.body.decoded : mail.body.decoded
+        end
+      end
+      
+      # Extrahiere nur den aktuellen E-Mail-Inhalt (ohne Antworten/Forwards)
+      return extract_original_content(content)
+    end
+    
+    def self.html_to_text(html_content)
+      # Einfache HTML zu Text Konvertierung
+      text = html_content
+        .gsub(/<br\s*\/?>/i, "\n")           # <br> zu Zeilenumbrüchen
+        .gsub(/<\/p>/i, "\n\n")              # </p> zu doppelten Zeilenumbrüchen
+        .gsub(/<p[^>]*>/i, "")               # <p> Tags entfernen
+        .gsub(/<div[^>]*>/i, "")             # <div> Tags entfernen
+        .gsub(/<\/div>/i, "\n")              # </div> zu Zeilenumbrüchen
+        .gsub(/<[^>]*>/i, "")                # Alle anderen HTML Tags entfernen
+        .gsub(/&nbsp;/i, " ")                # &nbsp; zu Leerzeichen
+        .gsub(/&amp;/i, "&")                 # &amp; zu &
+        .gsub(/&lt;/i, "<")                  # &lt; zu <
+        .gsub(/&gt;/i, ">")                  # &gt; zu >
+        .gsub(/&quot;/i, '"')                # &quot; zu "
+        .gsub(/&#39;/i, "'")                 # &#39; zu '
+        .gsub(/\n\s*\n\s*\n/, "\n\n")        # Mehrfache Leerzeilen reduzieren
+        .strip                               # Whitespace am Anfang/Ende entfernen
+      
+      return text
+    end
+    
+    def self.extract_original_content(content)
+      return "" if content.nil? || content.empty?
+      
+      lines = content.split("\n")
+      original_lines = []
+      
+      # Verschiedene Antwort-Marker
+      reply_markers = [
+        /^>+\s*/,                           # > (Reply-Marker)
+        /^On .* wrote:$/i,                  # "On ... wrote:"
+        /^Am .* schrieb .*:$/i,             # "Am ... schrieb ...:"
+        /^Von: .*$/i,                       # "Von: ..."
+        /^From: .*$/i,                      # "From: ..."
+        /^Gesendet: .*$/i,                  # "Gesendet: ..."
+        /^Sent: .*$/i,                      # "Sent: ..."
+        /^An: .*$/i,                        # "An: ..."
+        /^To: .*$/i,                        # "To: ..."
+        /^Betreff: .*$/i,                   # "Betreff: ..."
+        /^Subject: .*$/i,                   # "Subject: ..."
+        /^-{3,}.*Original Message.*-{3,}$/i, # "--- Original Message ---"
+        /^-{3,}.*Ursprüngliche Nachricht.*-{3,}$/i, # "--- Ursprüngliche Nachricht ---"
+        /^From: .*Sent: .*To: .*Subject: .*$/i, # E-Mail-Header-Block
+        /^Original Message/i,               # "Original Message"
+        /^Ursprüngliche Nachricht/i,        # "Ursprüngliche Nachricht"
+        /^Reply to:/i,                      # "Reply to:"
+        /^Antwort an:/i,                    # "Antwort an:"
+        /^Forwarded message/i,              # "Forwarded message"
+        /^Weitergeleitete Nachricht/i,      # "Weitergeleitete Nachricht"
+        /^Begin forwarded message/i,        # "Begin forwarded message"
+        /^Anfang weitergeleitete Nachricht/i # "Anfang weitergeleitete Nachricht"
+      ]
+      
+      lines.each do |line|
+        # Prüfe ob diese Zeile ein Antwort-Marker ist
+        is_reply_marker = reply_markers.any? { |marker| line.match(marker) }
+        
+        if is_reply_marker
+          break  # Stoppe hier - alles danach ist Antwort/Forward
+        end
+        
+        original_lines << line
+      end
+      
+      # Entferne leere Zeilen am Ende
+      while original_lines.last && original_lines.last.strip.empty?
+        original_lines.pop
+      end
+      
+      return original_lines.join("\n").strip
     end
   end
 end
