@@ -1,40 +1,76 @@
-<h2><%= l('mail_receiver.settings.incoming_mails') %></h2>
+<% 
+# Lokalisierungen direkt definieren
+translations = {
+  'incoming_mails' => 'Eingehende Mails',
+  'imap_host' => 'IMAP-Host',
+  'imap_port' => 'IMAP-Port',
+  'imap_ssl' => 'SSL verwenden',
+  'imap_user' => 'IMAP-Benutzer',
+  'imap_password' => 'IMAP-Passwort',
+  'interval_seconds' => 'Intervall (Sekunden)',
+  'default_project' => 'Standard-Projektkennung',
+  'no_ticket_mode' => 'Verhalten bei Mails ohne Ticket-ID',
+  'no_ticket_comment' => 'Als Kommentar in Fallback-Ticket einfügen',
+  'no_ticket_new' => 'Neues Ticket im Projekt erstellen',
+  'fallback_issue_id' => 'Fallback-Ticket-ID',
+  'manual_import' => 'Manueller Mail-Import',
+  'import_format' => 'Import-Format',
+  'manual_import_count' => 'Standard-Anzahl für manuellen Import',
+  'manual_import_action' => 'Manueller Import',
+  'import_button' => 'Import starten',
+  'import_help' => 'Anzahl der zu importierenden Mails (1-100)',
+  'reminder_mails' => 'Erinnerungs-Mails',
+  'reminder_enabled' => 'Tägliche Erinnerungen aktivieren',
+  'reminder_time' => 'Uhrzeit (HH:MM)',
+  'mail_log' => 'Mail-Log',
+  'log_level' => 'Log-Level',
+  'log_empty' => 'Bisher keine Mails verarbeitet.',
+  'clear_log' => 'Log leeren',
+  'clear_log_confirm' => 'Sind Sie sicher, dass Sie das Mail-Log leeren möchten?'
+}
+
+def t(key)
+  translations[key] || key
+end
+%>
+
+<h2><%= t('incoming_mails') %></h2>
 
 <fieldset>
-  <legend><%= l('mail_receiver.settings.incoming_mails') %></legend>
+  <legend><%= t('incoming_mails') %></legend>
   <table class="form">
-    <tr><th><%= l('mail_receiver.settings.imap_host') %></th><td><%= text_field_tag 'settings[imap_host]', @settings['imap_host'] %></td></tr>
-    <tr><th><%= l('mail_receiver.settings.imap_port') %></th><td><%= text_field_tag 'settings[imap_port]', @settings['imap_port'] %></td></tr>
-    <tr><th><%= l('mail_receiver.settings.imap_ssl') %></th><td><%= select_tag 'settings[imap_ssl]', options_for_select([['Ja','true'],['Nein','false']], @settings['imap_ssl']) %></td></tr>
-    <tr><th><%= l('mail_receiver.settings.imap_user') %></th><td><%= text_field_tag 'settings[imap_user]', @settings['imap_user'] %></td></tr>
-    <tr><th><%= l('mail_receiver.settings.imap_password') %></th><td><%= password_field_tag 'settings[imap_password]', @settings['imap_password'] %></td></tr>
-    <tr><th><%= l('mail_receiver.settings.interval_seconds') %></th><td><%= text_field_tag 'settings[interval_seconds]', @settings['interval_seconds'] %></td></tr>
-    <tr><th><%= l('mail_receiver.settings.default_project') %></th><td><%= text_field_tag 'settings[default_project]', @settings['default_project'] %></td></tr>
+    <tr><th><%= t('imap_host') %></th><td><%= text_field_tag 'settings[imap_host]', @settings['imap_host'] %></td></tr>
+    <tr><th><%= t('imap_port') %></th><td><%= text_field_tag 'settings[imap_port]', @settings['imap_port'] %></td></tr>
+    <tr><th><%= t('imap_ssl') %></th><td><%= select_tag 'settings[imap_ssl]', options_for_select([['Ja','true'],['Nein','false']], @settings['imap_ssl']) %></td></tr>
+    <tr><th><%= t('imap_user') %></th><td><%= text_field_tag 'settings[imap_user]', @settings['imap_user'] %></td></tr>
+    <tr><th><%= t('imap_password') %></th><td><%= password_field_tag 'settings[imap_password]', @settings['imap_password'] %></td></tr>
+    <tr><th><%= t('interval_seconds') %></th><td><%= text_field_tag 'settings[interval_seconds]', @settings['interval_seconds'] %></td></tr>
+    <tr><th><%= t('default_project') %></th><td><%= text_field_tag 'settings[default_project]', @settings['default_project'] %></td></tr>
     <tr>
-      <th><%= l('mail_receiver.settings.no_ticket_mode') %></th>
+      <th><%= t('no_ticket_mode') %></th>
       <td>
-        <%= radio_button_tag 'settings[no_ticket_mode]', 'comment', @settings['no_ticket_mode'] == 'comment' %> <%= l('mail_receiver.settings.no_ticket_comment') %>
-        <%= text_field_tag 'settings[fallback_issue_id]', @settings['fallback_issue_id'], placeholder: l('mail_receiver.settings.fallback_issue_id') %><br>
-        <%= radio_button_tag 'settings[no_ticket_mode]', 'new_ticket', @settings['no_ticket_mode'] == 'new_ticket' %> <%= l('mail_receiver.settings.no_ticket_new') %>
+        <%= radio_button_tag 'settings[no_ticket_mode]', 'comment', @settings['no_ticket_mode'] == 'comment' %> <%= t('no_ticket_comment') %>
+        <%= text_field_tag 'settings[fallback_issue_id]', @settings['fallback_issue_id'], placeholder: t('fallback_issue_id') %><br>
+        <%= radio_button_tag 'settings[no_ticket_mode]', 'new_ticket', @settings['no_ticket_mode'] == 'new_ticket' %> <%= t('no_ticket_new') %>
       </td>
     </tr>
   </table>
 </fieldset>
 
 <fieldset>
-  <legend><%= l('mail_receiver.settings.manual_import') %></legend>
+  <legend><%= t('manual_import') %></legend>
   <table class="form">
-    <tr><th><%= l('mail_receiver.settings.import_format') %></th><td><%= select_tag 'settings[import_format]', options_for_select([['Plain Text','plain_text'],['Raw MIME','raw_mime']], @settings['import_format']), class: 'import-format-select' %></td></tr>
-    <tr><th><%= l('mail_receiver.settings.manual_import_count') %></th><td><%= text_field_tag 'settings[manual_import_count]', @settings['manual_import_count'] %></td></tr>
+    <tr><th><%= t('import_format') %></th><td><%= select_tag 'settings[import_format]', options_for_select([['Plain Text','plain_text'],['Raw MIME','raw_mime']], @settings['import_format']), class: 'import-format-select' %></td></tr>
+    <tr><th><%= t('manual_import_count') %></th><td><%= text_field_tag 'settings[manual_import_count]', @settings['manual_import_count'] %></td></tr>
     <tr>
-      <th><%= l('mail_receiver.settings.manual_import_action') %></th>
+      <th><%= t('manual_import_action') %></th>
       <td>
         <div class="manual-import-form">
           <%= number_field_tag :import_count, @settings['manual_import_count'], min: 1, max: 100 %>
-          <button type="button" onclick="performManualImport()" class="button-positive"><%= l('mail_receiver.settings.import_button') %></button>
+          <button type="button" onclick="performManualImport()" class="button-positive"><%= t('import_button') %></button>
         </div>
         <span class="import-help-text">
-          <%= l('mail_receiver.settings.import_help') %>
+          <%= t('import_help') %>
         </span>
       </td>
     </tr>
@@ -42,21 +78,21 @@
 </fieldset>
 
 <fieldset>
-  <legend><%= l('mail_receiver.settings.reminder_mails') %></legend>
+  <legend><%= t('reminder_mails') %></legend>
   <table class="form">
-    <tr><th><%= l('mail_receiver.settings.reminder_enabled') %></th><td><%= check_box_tag 'settings[reminder_enabled]', 'true', @settings['reminder_enabled'] == 'true' %></td></tr>
-    <tr><th><%= l('mail_receiver.settings.reminder_time') %></th><td><%= text_field_tag 'settings[reminder_time]', @settings['reminder_time'] %></td></tr>
+    <tr><th><%= t('reminder_enabled') %></th><td><%= check_box_tag 'settings[reminder_enabled]', 'true', @settings['reminder_enabled'] == 'true' %></td></tr>
+    <tr><th><%= t('reminder_time') %></th><td><%= text_field_tag 'settings[reminder_time]', @settings['reminder_time'] %></td></tr>
   </table>
 </fieldset>
 
 <fieldset>
-  <legend><%= l('mail_receiver.settings.mail_log') %></legend>
+  <legend><%= t('mail_log') %></legend>
   <table class="form">
-    <tr><th><%= l('mail_receiver.settings.log_level') %></th><td><%= select_tag 'settings[log_level]', options_for_select([['Debug','debug'],['Info','info'],['Warn','warn'],['Error','error']], @settings['log_level']), class: 'log-level-select' %></td></tr>
+    <tr><th><%= t('log_level') %></th><td><%= select_tag 'settings[log_level]', options_for_select([['Debug','debug'],['Info','info'],['Warn','warn'],['Error','error']], @settings['log_level']), class: 'log-level-select' %></td></tr>
   </table>
   <div class="mail-receiver-log">
     <% if (@settings['mail_log'] || []).empty? %>
-      <div><%= l('mail_receiver.settings.log_empty') %></div>
+      <div><%= t('log_empty') %></div>
     <% else %>
       <% (@settings['mail_log'] || []).reverse.each do |line| %>
         <% css_class = case line
@@ -71,7 +107,7 @@
     <% end %>
   </div>
   <div class="clear-log-button">
-    <button type="button" onclick="clearLog()" class="button"><%= l('mail_receiver.settings.clear_log') %></button>
+    <button type="button" onclick="clearLog()" class="button"><%= t('clear_log') %></button>
   </div>
 </fieldset>
 
@@ -91,7 +127,7 @@ function performManualImport() {
 }
 
 function clearLog() {
-  if (confirm('<%= l('mail_receiver.settings.clear_log_confirm') %>')) {
+  if (confirm('<%= t('clear_log_confirm') %>')) {
     // Hier würde normalerweise ein AJAX-Call stehen
     // Für jetzt zeigen wir nur eine Bestätigung
     alert('Log wurde geleert.');
