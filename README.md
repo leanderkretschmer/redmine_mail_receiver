@@ -32,17 +32,18 @@
 2. `bundle install`
 3. Redmine neu starten
 4. **Konfiguration**: 
-   - Kopieren Sie `config/settings.yml.example` zu `config/settings.yml`
+   - Kopieren Sie `data/settings.yml.example` zu `data/settings.yml`
    - Passen Sie die Einstellungen in der Datei an
    - Oder konfigurieren Sie über Administration → Plugins → Mail Receiver
 
 ## Konfiguration
 
 ### Plugin-interne Speicherung
-Das Plugin speichert alle Einstellungen in `config/settings.yml` statt in der Redmine-Datenbank. Dies bietet:
+Das Plugin speichert alle Einstellungen in `data/settings.yml` statt in der Redmine-Datenbank. Dies bietet:
 - **Bessere Portabilität**: Einstellungen bleiben beim Plugin
 - **Sicherheit**: Sensible Daten nicht in der Datenbank
 - **Einfache Backup/Restore**: Nur eine Datei zu sichern
+- **Docker-Kompatibilität**: Automatischer Fallback auf temporäres Verzeichnis bei Schreibproblemen
 
 ### Manueller Import
 - **Import-Format**: Wählen Sie zwischen "Plain Text" (Standard) und "Raw MIME"

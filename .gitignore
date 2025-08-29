@@ -1,5 +1,8 @@
 # Plugin-spezifische Konfigurationsdatei
-config/settings.yml
+data/settings.yml
+
+# Fallback-Konfigurationsdatei (für Docker)
+/tmp/mail_receiver_settings.yml
 
 # Log-Dateien
 *.log
