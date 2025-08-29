@@ -93,6 +93,50 @@ module MailReceiver
         return { success: false, error: e.message }
       end
     end
+    
+    def self.process_load_balanced
+      cfg = Setting.plugin_mail_receiver
+      return if cfg['imap_host'].blank?
+
+      add_detailed_log("Load balancing: Processing single email")
+      
+      begin
+        imap = Net::IMAP.new(
+          cfg['imap_host'], 
+          port: cfg['imap_port'].to_i, 
+          ssl: cfg['imap_ssl'] == 'true'
+        )
+        imap.login(cfg['imap_user'], cfg['imap_password'])
+        imap.select('INBOX')
+
+        # Hole nur eine ungelesene E-Mail
+        unseen_messages = imap.search(['UNSEEN'])
+        
+        if unseen_messages.any?
+          msg_id = unseen_messages.first
+          add_detailed_log("Load balancing: Processing message ID #{msg_id}")
+          
+          msg = imap.fetch(msg_id, 'RFC822')[0].attr['RFC822']
+          mail = Mail.read_from_string(msg)
+          
+          add_detailed_log("Load balancing: From: #{mail.from&.first || 'Unknown'}")
+          add_detailed_log("Load balancing: Subject: #{mail.subject || 'No subject'}")
+          
+          handle_mail(mail)
+          imap.store(msg_id, "+FLAGS", [:Seen])
+          
+          add_detailed_log("Load balancing: Successfully processed 1 email")
+        else
+          add_detailed_log("Load balancing: No unseen messages available")
+        end
+
+        imap.logout
+        imap.disconnect
+      rescue => e
+        add_detailed_log("Load balancing error: #{e.message}")
+        Rails.logger.error("[MailReceiver] Load balancing error: #{e.message}")
+      end
+    end
 
     def self.handle_mail(mail)
       subject = mail.subject.to_s

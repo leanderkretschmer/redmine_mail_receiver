@@ -1,21 +1,154 @@
-<h2><%= l('mail_receiver.settings.incoming_mails') %></h2>
+<!-- Tabs -->
+<div class="tabs">
+  <ul>
+    <li><a href="#tab-general"><%= l('mail_receiver.settings.tab_general') %></a></li>
+    <% if @settings['dev_mode_enabled'] == 'true' %>
+      <li><a href="#tab-dev"><%= l('mail_receiver.settings.tab_dev') %></a></li>
+    <% end %>
+  </ul>
 
-<fieldset>
-  <legend><%= l('mail_receiver.settings.incoming_mails') %></legend>
+  <!-- General Tab -->
+  <div id="tab-general">
+    <h2><%= l('mail_receiver.settings.incoming_mails') %></h2>
+
+    <fieldset>
+      <legend><%= l('mail_receiver.settings.incoming_mails') %></legend>
+      <table class="form">
+        <tr><th><%= l('mail_receiver.settings.imap_host') %></th><td><%= text_field_tag 'settings[imap_host]', @settings['imap_host'] %></td></tr>
+        <tr><th><%= l('mail_receiver.settings.imap_port') %></th><td><%= text_field_tag 'settings[imap_port]', @settings['imap_port'] %></td></tr>
+        <tr><th><%= l('mail_receiver.settings.imap_ssl') %></th><td><%= select_tag 'settings[imap_ssl]', options_for_select([['Ja','true'],['Nein','false']], @settings['imap_ssl']) %></td></tr>
+        <tr><th><%= l('mail_receiver.settings.imap_user') %></th><td><%= text_field_tag 'settings[imap_user]', @settings['imap_user'] %></td></tr>
+        <tr><th><%= l('mail_receiver.settings.imap_password') %></th><td><%= password_field_tag 'settings[imap_password]', @settings['imap_password'] %></td></tr>
+        <tr><th><%= l('mail_receiver.settings.interval_seconds') %></th><td><%= text_field_tag 'settings[interval_seconds]', @settings['interval_seconds'] %></td></tr>
+        <tr><th><%= l('mail_receiver.settings.default_project') %></th><td><%= text_field_tag 'settings[default_project]', @settings['default_project'] %></td></tr>
+        <tr>
+          <th><%= l('mail_receiver.settings.no_ticket_mode') %></th>
+          <td>
+            <%= radio_button_tag 'settings[no_ticket_mode]', 'comment', @settings['no_ticket_mode'] == 'comment' %> <%= l('mail_receiver.settings.no_ticket_comment') %>
+            <%= text_field_tag 'settings[fallback_issue_id]', @settings['fallback_issue_id'], placeholder: l('mail_receiver.settings.fallback_issue_id') %><br>
+            <%= radio_button_tag 'settings[no_ticket_mode]', 'new_ticket', @settings['no_ticket_mode'] == 'new_ticket' %> <%= l('mail_receiver.settings.no_ticket_new') %>
+          </td>
+        </tr>
+      </table>
+    </fieldset>
+
+    <fieldset>
+      <legend><%= l('mail_receiver.settings.reminder_mails') %></legend>
+      <table class="form">
+        <tr><th><%= l('mail_receiver.settings.reminder_enabled') %></th><td><%= check_box_tag 'settings[reminder_enabled]', 'true', @settings['reminder_enabled'] == 'true' %></td></tr>
+        <tr><th><%= l('mail_receiver.settings.reminder_time') %></th><td><%= text_field_tag 'settings[reminder_time]', @settings['reminder_time'] %></td></tr>
+      </table>
+    </fieldset>
+
+    <fieldset>
+      <legend><%= l('mail_receiver.settings.test_mails') %></legend>
+      <table class="form">
+        <tr>
+          <th><%= l('mail_receiver.settings.test_email') %></th>
+          <td>
+            <%= form_tag '/plugin_settings/mail_receiver/send_test_mail', method: :post, style: 'display: inline;' do %>
+              <%= text_field_tag :test_email, nil, placeholder: l('mail_receiver.settings.test_email_placeholder'), style: 'width: 300px;' %>
+              <%= submit_tag l('mail_receiver.settings.send_test_mail'), class: 'button-positive' %>
+            <% end %>
+            <p class="help"><%= l('mail_receiver.settings.test_mail_help') %></p>
+          </td>
+        </tr>
+      </table>
+    </fieldset>
+
+    <fieldset>
+      <legend><%= l('mail_receiver.settings.mail_log') %></legend>
+      <div style="background:#f9f9f9; border:1px solid #ccc; padding:5px; max-height:200px; overflow:auto;">
+        <% if (@settings['mail_log'] || []).empty? %>
+          <div><%= l('mail_receiver.settings.log_empty') %></div>
+        <% else %>
+          <% (@settings['mail_log'] || []).reverse.each do |line| %>
+            <div><%= line %></div>
+          <% end %>
+        <% end %>
+      </div>
+    </fieldset>
+  </div>
+
+  <!-- Dev Tab -->
+  <% if @settings['dev_mode_enabled'] == 'true' %>
+    <div id="tab-dev">
+      <h2><%= l('mail_receiver.settings.dev_mode') %></h2>
+
+      <fieldset>
+        <legend><%= l('mail_receiver.settings.manual_import') %></legend>
+        <table class="form">
+          <tr><th><%= l('mail_receiver.settings.manual_import_enabled') %></th><td><%= check_box_tag 'settings[manual_import_enabled]', 'true', @settings['manual_import_enabled'] == 'true' %></td></tr>
+          <tr><th><%= l('mail_receiver.settings.manual_import_count') %></th><td><%= text_field_tag 'settings[manual_import_count]', @settings['manual_import_count'] %></td></tr>
+          <tr>
+            <th><%= l('mail_receiver.settings.manual_import_action') %></th>
+            <td>
+              <%= form_tag '/plugin_settings/mail_receiver/manual_import', method: :post, style: 'display: inline;' do %>
+                <%= text_field_tag :import_count, @settings['manual_import_count'], placeholder: l('mail_receiver.settings.manual_import_count_placeholder'), style: 'width: 100px;' %>
+                <%= submit_tag l('mail_receiver.settings.start_manual_import'), class: 'button-positive' %>
+              <% end %>
+              <p class="help"><%= l('mail_receiver.settings.manual_import_help') %></p>
+            </td>
+          </tr>
+        </table>
+      </fieldset>
+
+      <fieldset>
+        <legend><%= l('mail_receiver.settings.load_balancing') %></legend>
+        <table class="form">
+          <tr><th><%= l('mail_receiver.settings.load_balancing_enabled') %></th><td><%= check_box_tag 'settings[load_balancing_enabled]', 'true', @settings['load_balancing_enabled'] == 'true' %></td></tr>
+          <tr><th><%= l('mail_receiver.settings.load_balancing_mails_per_hour') %></th><td><%= text_field_tag 'settings[load_balancing_mails_per_hour]', @settings['load_balancing_mails_per_hour'] %></td></tr>
+          <tr>
+            <th><%= l('mail_receiver.settings.load_balancing_info') %></th>
+            <td>
+              <p class="help"><%= l('mail_receiver.settings.load_balancing_help') %></p>
+              <div style="background:#f0f8ff; border:1px solid #ccc; padding:10px; margin-top:5px;">
+                <strong><%= l('mail_receiver.settings.load_balancing_calculation') %></strong><br>
+                <% if @settings['load_balancing_mails_per_hour'].to_i > 0 %>
+                  <% mails_per_hour = @settings['load_balancing_mails_per_hour'].to_i %>
+                  <% interval_seconds = 3600.0 / mails_per_hour %>
+                  <% mails_per_minute = mails_per_hour / 60.0 %>
+                  <%= l('mail_receiver.settings.load_balancing_details', 
+                        mails_per_hour: mails_per_hour,
+                        interval_seconds: interval_seconds.round(1),
+                        mails_per_minute: mails_per_minute.round(2)) %>
+                <% else %>
+                  <%= l('mail_receiver.settings.load_balancing_no_calculation') %>
+                <% end %>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </fieldset>
+
+      <fieldset>
+        <legend><%= l('mail_receiver.settings.detailed_logging') %></legend>
+        <details style="margin-top: 10px;">
+          <summary style="cursor: pointer; font-weight: bold; color: #666;"><%= l('mail_receiver.settings.detailed_log') %></summary>
+          <div style="background:#f5f5f5; border:1px solid #ddd; padding:5px; max-height:300px; overflow:auto; margin-top: 5px; font-family: monospace; font-size: 11px;">
+            <% if (@settings['detailed_log'] || []).empty? %>
+              <div><%= l('mail_receiver.settings.detailed_log_empty') %></div>
+            <% else %>
+              <% (@settings['detailed_log'] || []).reverse.each do |line| %>
+                <div><%= line %></div>
+              <% end %>
+            <% end %>
+          </div>
+        </details>
+      </fieldset>
+    </div>
+  <% end %>
+</div>
+
+<!-- Dev Mode Toggle -->
+<fieldset style="margin-top: 20px; border: 2px solid #ff6b6b;">
+  <legend style="color: #ff6b6b; font-weight: bold;"><%= l('mail_receiver.settings.dev_mode_toggle') %></legend>
   <table class="form">
-    <tr><th><%= l('mail_receiver.settings.imap_host') %></th><td><%= text_field_tag 'settings[imap_host]', @settings['imap_host'] %></td></tr>
-    <tr><th><%= l('mail_receiver.settings.imap_port') %></th><td><%= text_field_tag 'settings[imap_port]', @settings['imap_port'] %></td></tr>
-    <tr><th><%= l('mail_receiver.settings.imap_ssl') %></th><td><%= select_tag 'settings[imap_ssl]', options_for_select([['Ja','true'],['Nein','false']], @settings['imap_ssl']) %></td></tr>
-    <tr><th><%= l('mail_receiver.settings.imap_user') %></th><td><%= text_field_tag 'settings[imap_user]', @settings['imap_user'] %></td></tr>
-    <tr><th><%= l('mail_receiver.settings.imap_password') %></th><td><%= password_field_tag 'settings[imap_password]', @settings['imap_password'] %></td></tr>
-    <tr><th><%= l('mail_receiver.settings.interval_seconds') %></th><td><%= text_field_tag 'settings[interval_seconds]', @settings['interval_seconds'] %></td></tr>
-    <tr><th><%= l('mail_receiver.settings.default_project') %></th><td><%= text_field_tag 'settings[default_project]', @settings['default_project'] %></td></tr>
     <tr>
-      <th><%= l('mail_receiver.settings.no_ticket_mode') %></th>
+      <th><%= l('mail_receiver.settings.dev_mode_enabled') %></th>
       <td>
-        <%= radio_button_tag 'settings[no_ticket_mode]', 'comment', @settings['no_ticket_mode'] == 'comment' %> <%= l('mail_receiver.settings.no_ticket_comment') %>
-        <%= text_field_tag 'settings[fallback_issue_id]', @settings['fallback_issue_id'], placeholder: l('mail_receiver.settings.fallback_issue_id') %><br>
-        <%= radio_button_tag 'settings[no_ticket_mode]', 'new_ticket', @settings['no_ticket_mode'] == 'new_ticket' %> <%= l('mail_receiver.settings.no_ticket_new') %>
+        <%= check_box_tag 'settings[dev_mode_enabled]', 'true', @settings['dev_mode_enabled'] == 'true' %>
+        <p class="help"><%= l('mail_receiver.settings.dev_mode_help') %></p>
       </td>
     </tr>
   </table>

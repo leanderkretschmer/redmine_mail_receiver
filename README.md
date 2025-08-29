@@ -13,6 +13,27 @@
 3. Redmine neu starten
 4. Einstellungen unter Administration → Plugins → Mail Receiver konfigurieren
 
+## Neue Features in Version 1.8.0
+
+### Entwicklungsmodus (Dev Mode)
+- Neuer Tab-basierter Entwicklungsmodus in den Einstellungen
+- Erweiterte Funktionen nur im Dev Mode verfügbar
+- Einfache Aktivierung über Checkbox am Ende der Einstellungen
+- Rote Umrandung zur Kennzeichnung des Dev Mode
+
+### Load Balancing
+- Neue Load Balancing Option im Dev Mode
+- Konfigurierbare Anzahl E-Mails pro Stunde (z.B. 60 E-Mails/Stunde)
+- Automatische Berechnung des optimalen Intervalls
+- Live-Anzeige der Berechnung (Intervall in Sekunden, E-Mails pro Minute)
+- Verarbeitet nur eine E-Mail pro Durchlauf für gleichmäßige Lastverteilung
+
+### Verbesserte Benutzeroberfläche
+- Tab-System: "Allgemein" und "Entwicklung" Tabs
+- Dev Mode Toggle mit auffälliger roter Umrandung
+- Live-Berechnung der Load Balancing Parameter
+- Bessere Organisation der erweiterten Funktionen
+
 ## Neue Features in Version 1.7.0
 
 ### Manueller Import
@@ -55,8 +76,22 @@
 - **Testmail senden**: Button zum Senden einer Testmail
 - Die Testmail wird über die konfigurierte Redmine E-Mail-Einstellung gesendet
 
-### Manueller Import-Einstellungen
+### Entwicklungsmodus (Dev Mode)
+- **Aktivieren**: Checkbox zum Aktivieren des Entwicklungsmodus
+- **Tab-System**: "Allgemein" und "Entwicklung" Tabs
+- **Erweiterte Funktionen**: Nur im Dev Mode verfügbar
+
+### Manueller Import-Einstellungen (Dev Mode)
 - **Aktivieren**: Checkbox zum Aktivieren der manuellen Import-Funktion
 - **Standard-Anzahl**: Standard-Anzahl der zu importierenden E-Mails
 - **Import starten**: Button zum Starten des manuellen Imports mit konfigurierbarer Anzahl
-- **Erweitertes Log**: Detaillierte Protokollierung aller Import-Schritte
+
+### Load Balancing-Einstellungen (Dev Mode)
+- **Aktivieren**: Checkbox zum Aktivieren des Load Balancing
+- **E-Mails pro Stunde**: Konfigurierbare Anzahl (z.B. 60 E-Mails/Stunde)
+- **Live-Berechnung**: Automatische Anzeige des Intervalls und der Verarbeitungsrate
+- **Gleichmäßige Verarbeitung**: Nur eine E-Mail pro Durchlauf
+
+### Erweitertes Logging (Dev Mode)
+- **Detaillierte Protokollierung**: Alle Import-Schritte und Load Balancing Aktivitäten
+- **Kontinuierliche Aktualisierung**: Live-Updates während der Verarbeitung

@@ -6,7 +6,7 @@ Redmine::Plugin.register :mail_receiver do
   name 'Mail Receiver Plugin'
   author 'Leander Kretschmer'
   description 'IMAP Mail Receiver + Reminder Scheduler for Redmine'
-  version '1.7.1'
+  version '1.8.0'
   url 'https://github.com/leanderkretschmer/redmine_mail_receiver'
   author_url 'https://github.com/leanderkretschmer'
 
@@ -26,9 +26,16 @@ Redmine::Plugin.register :mail_receiver do
     'reminder_enabled' => 'false',
     'reminder_time' => '09:00',
 
+    # Dev Mode
+    'dev_mode_enabled' => 'false',
+
     # Manual import
     'manual_import_enabled' => 'false',
     'manual_import_count' => '10',
+
+    # Load Balancing
+    'load_balancing_enabled' => 'false',
+    'load_balancing_mails_per_hour' => '60',
 
     # Log
     'mail_log' => [],

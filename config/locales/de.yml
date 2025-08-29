@@ -16,11 +16,27 @@ de:
       reminder_mails: "Erinnerungs-Mails"
       reminder_enabled: "Tägliche Erinnerungen aktivieren"
       reminder_time: "Uhrzeit (HH:MM)"
+      # Tabs
+      tab_general: "Allgemein"
+      tab_dev: "Entwicklung"
+      
+      # Dev Mode
+      dev_mode: "Entwicklungsmodus"
+      dev_mode_enabled: "Entwicklungsmodus aktivieren"
+      dev_mode_toggle: "Entwicklungsmodus"
+      dev_mode_help: "Aktivieren Sie den Entwicklungsmodus um erweiterte Funktionen wie manuellen Import, Load Balancing und detailliertes Logging zu verwenden."
+      
+      # General
       test_mails: "Testmails"
       test_email: "E-Mail-Adresse für Testmail"
       test_email_placeholder: "ihre.email@beispiel.de"
       send_test_mail: "Testmail senden"
       test_mail_help: "Geben Sie eine E-Mail-Adresse ein und klicken Sie auf 'Testmail senden', um die E-Mail-Konfiguration zu testen."
+      mail_log: "Mail-Log"
+      log_empty: "Bisher keine Mails verarbeitet."
+      moved_to_inbox: "Keine Ticket-ID gefunden. Verschoben in Posteingang"
+      
+      # Dev Features
       manual_import: "Manueller Import"
       manual_import_enabled: "Manuellen Import aktivieren"
       manual_import_count: "Standard-Anzahl E-Mails"
@@ -28,11 +44,19 @@ de:
       manual_import_count_placeholder: "10"
       start_manual_import: "Import starten"
       manual_import_help: "Geben Sie die Anzahl der zu importierenden E-Mails ein (1-100) und klicken Sie auf 'Import starten'."
-      mail_log: "Mail-Log"
-      log_empty: "Bisher keine Mails verarbeitet."
+      
+      load_balancing: "Load Balancing"
+      load_balancing_enabled: "Load Balancing aktivieren"
+      load_balancing_mails_per_hour: "E-Mails pro Stunde"
+      load_balancing_info: "Load Balancing Informationen"
+      load_balancing_help: "Konfigurieren Sie die Anzahl der E-Mails, die pro Stunde verarbeitet werden sollen. Das System berechnet automatisch das optimale Intervall."
+      load_balancing_calculation: "Berechnung:"
+      load_balancing_details: "%{mails_per_hour} E-Mails/Stunde = %{interval_seconds} Sekunden Intervall = %{mails_per_minute} E-Mails/Minute"
+      load_balancing_no_calculation: "Bitte geben Sie eine Anzahl E-Mails pro Stunde ein."
+      
+      detailed_logging: "Detailliertes Logging"
       detailed_log: "Erweitertes Log"
       detailed_log_empty: "Keine detaillierten Logs verfügbar."
-      moved_to_inbox: "Keine Ticket-ID gefunden. Verschoben in Posteingang"
     test_mail:
       email_required: "Bitte geben Sie eine E-Mail-Adresse ein."
       invalid_email: "Bitte geben Sie eine gültige E-Mail-Adresse ein."
