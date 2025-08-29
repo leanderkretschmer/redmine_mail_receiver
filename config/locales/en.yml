@@ -57,6 +57,8 @@ en:
       detailed_logging: "Detailed Logging"
       detailed_log: "Detailed Log"
       detailed_log_empty: "No detailed logs available."
+      dev_mode_disabled: "Development Mode Disabled"
+      dev_mode_disabled_message: "Enable development mode to access advanced features like test mails, manual import, load balancing and detailed logging."
     test_mail:
       email_required: "Please enter an email address."
       invalid_email: "Please enter a valid email address."
