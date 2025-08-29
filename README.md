@@ -13,6 +13,20 @@
 3. Redmine neu starten
 4. Einstellungen unter Administration → Plugins → Mail Receiver konfigurieren
 
+## Neue Features in Version 1.8.2
+
+### Verbesserte Benutzeroberfläche
+- Saubere Unterteilung auf einer Seite ohne Tabs
+- Entwicklungsmodus Sektion mit visueller Trennung
+- Alle IMAP-Einstellungen wieder sichtbar und verfügbar
+- Klare visuelle Trennung zwischen allgemeinen und Entwicklungsfunktionen
+
+### Entwicklungsmodus Sektion
+- Eigener Bereich mit roter Umrandung für den Dev Mode Toggle
+- Erweiterte Funktionen nur sichtbar wenn Dev Mode aktiviert
+- Visuelle Trennung durch Trennlinie und Abstand
+- Bessere Übersichtlichkeit ohne Tab-Navigation
+
 ## Neue Features in Version 1.8.1
 
 ### Verbesserter Entwicklungsmodus (Dev Mode)
@@ -90,10 +104,10 @@
 - Die Testmail wird über die konfigurierte Redmine E-Mail-Einstellung gesendet
 
 ### Entwicklungsmodus (Dev Mode)
-- **Entwicklung Tab**: Eigener Tab für alle erweiterten Funktionen
-- **Dev Mode Toggle**: Checkbox zum Aktivieren des Entwicklungsmodus
-- **Erweiterte Funktionen**: Nur im Dev Mode Tab verfügbar
-- **Klare Trennung**: Allgemeine Einstellungen und Entwicklungsfunktionen getrennt
+- **Entwicklungsmodus Sektion**: Eigener Bereich mit visueller Trennung
+- **Dev Mode Toggle**: Checkbox zum Aktivieren mit roter Umrandung
+- **Erweiterte Funktionen**: Nur sichtbar wenn Dev Mode aktiviert
+- **Visuelle Trennung**: Trennlinie und Abstand zwischen den Bereichen
 
 ### Manueller Import-Einstellungen (Dev Mode)
 - **Aktivieren**: Checkbox zum Aktivieren der manuellen Import-Funktion
