@@ -4,10 +4,10 @@ require 'mail'
 module MailReceiver
   class Receiver
     def self.process
-      cfg = Setting.plugin_mail_receiver
+      cfg = MailReceiver::Config.all
       return if cfg['imap_host'].blank?
 
-      imap = Net::IMAP.new(cfg['imap_host'], cfg['imap_port'].to_i, cfg['imap_ssl'] == 'true')
+      imap = Net::IMAP.new(cfg['imap_host'], port: cfg['imap_port'].to_i, ssl: cfg['imap_ssl'] == 'true')
       imap.login(cfg['imap_user'], cfg['imap_password'])
       imap.select('INBOX')
 
@@ -25,14 +25,14 @@ module MailReceiver
     end
 
     def self.manual_import(count = 10)
-      cfg = Setting.plugin_mail_receiver
+      cfg = MailReceiver::Config.all
       return { processed: 0, errors: 1 } if cfg['imap_host'].blank?
 
       processed = 0
       errors = 0
 
       begin
-        imap = Net::IMAP.new(cfg['imap_host'], cfg['imap_port'].to_i, cfg['imap_ssl'] == 'true')
+        imap = Net::IMAP.new(cfg['imap_host'], port: cfg['imap_port'].to_i, ssl: cfg['imap_ssl'] == 'true')
         imap.login(cfg['imap_user'], cfg['imap_password'])
         imap.select('INBOX')
 
@@ -85,8 +85,8 @@ module MailReceiver
         end
       else
         if user
-          if Setting.plugin_mail_receiver['no_ticket_mode'] == 'comment'
-            fallback_id = Setting.plugin_mail_receiver['fallback_issue_id'].to_i
+          if MailReceiver::Config.get('no_ticket_mode') == 'comment'
+            fallback_id = MailReceiver::Config.get('fallback_issue_id').to_i
             if fallback_id > 0 && (issue = Issue.find_by_id(fallback_id))
               add_journal(issue, user, "Keine Ticket-ID gefunden. Verschoben in Posteingang\n\n#{body}")
               log_info("Mail von #{from} zu Fallback-Ticket ##{issue.id} verschoben")
@@ -104,8 +104,7 @@ module MailReceiver
     end
 
     def self.extract_mail_body(mail)
-      cfg = Setting.plugin_mail_receiver
-      format = cfg['import_format'] || 'plain_text'
+      format = MailReceiver::Config.get('import_format') || 'plain_text'
 
       if format == 'raw_mime'
         # Originales Raw MIME Format (für Rückwärtskompatibilität)
@@ -147,7 +146,7 @@ module MailReceiver
     end
 
     def self.create_issue(user, subject, body)
-      project = Project.find_by_identifier(Setting.plugin_mail_receiver['default_project'])
+      project = Project.find_by_identifier(MailReceiver::Config.get('default_project'))
       return unless project
       issue = Issue.new(
         project: project,
@@ -174,32 +173,32 @@ module MailReceiver
     end
 
     def self.log_mail(message)
-      log = Setting.plugin_mail_receiver['mail_log'] || []
+      log = MailReceiver::Config.get('mail_log') || []
       log << "[#{Time.now.strftime('%Y-%m-%d %H:%M:%S')}] #{message}"
       log = log.last(100) # Die letzten 100 Einträge behalten
-      Setting.plugin_mail_receiver = Setting.plugin_mail_receiver.merge('mail_log' => log)
+      MailReceiver::Config.set('mail_log', log)
     end
 
     def self.log_info(message)
-      log_level = Setting.plugin_mail_receiver['log_level'] || 'info'
+      log_level = MailReceiver::Config.get('log_level') || 'info'
       return unless ['debug', 'info'].include?(log_level)
       log_mail("[INFO] #{message}")
     end
 
     def self.log_warn(message)
-      log_level = Setting.plugin_mail_receiver['log_level'] || 'info'
+      log_level = MailReceiver::Config.get('log_level') || 'info'
       return unless ['debug', 'info', 'warn'].include?(log_level)
       log_mail("[WARN] #{message}")
     end
 
     def self.log_error(message)
-      log_level = Setting.plugin_mail_receiver['log_level'] || 'info'
+      log_level = MailReceiver::Config.get('log_level') || 'info'
       return unless ['debug', 'info', 'warn', 'error'].include?(log_level)
       log_mail("[ERROR] #{message}")
     end
 
     def self.log_debug(message)
-      log_level = Setting.plugin_mail_receiver['log_level'] || 'info'
+      log_level = MailReceiver::Config.get('log_level') || 'info'
       return unless log_level == 'debug'
       log_mail("[DEBUG] #{message}")
     end

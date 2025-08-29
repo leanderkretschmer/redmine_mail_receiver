@@ -31,9 +31,18 @@
 1. Plugin in `redmine/plugins/mail_receiver` ablegen
 2. `bundle install`
 3. Redmine neu starten
-4. Einstellungen unter Administration → Plugins → Mail Receiver konfigurieren
+4. **Konfiguration**: 
+   - Kopieren Sie `config/settings.yml.example` zu `config/settings.yml`
+   - Passen Sie die Einstellungen in der Datei an
+   - Oder konfigurieren Sie über Administration → Plugins → Mail Receiver
 
 ## Konfiguration
+
+### Plugin-interne Speicherung
+Das Plugin speichert alle Einstellungen in `config/settings.yml` statt in der Redmine-Datenbank. Dies bietet:
+- **Bessere Portabilität**: Einstellungen bleiben beim Plugin
+- **Sicherheit**: Sensible Daten nicht in der Datenbank
+- **Einfache Backup/Restore**: Nur eine Datei zu sichern
 
 ### Manueller Import
 - **Import-Format**: Wählen Sie zwischen "Plain Text" (Standard) und "Raw MIME"

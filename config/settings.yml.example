@@ -1,0 +1,27 @@
+# Mail Receiver Plugin Konfiguration
+# Kopieren Sie diese Datei zu config/settings.yml und passen Sie die Werte an
+
+# IMAP-Einstellungen
+imap_host: "mail.example.com"
+imap_port: "993"
+imap_ssl: "true"
+imap_user: "your-email@example.com"
+imap_password: "your-password"
+
+# Automatischer Import
+interval_seconds: "300"
+default_project: "your-project-identifier"
+no_ticket_mode: "comment"  # "comment" oder "new_ticket"
+fallback_issue_id: "123"
+
+# Manueller Import
+manual_import_count: "10"
+import_format: "plain_text"  # "plain_text" oder "raw_mime"
+
+# Reminder
+reminder_enabled: "false"
+reminder_time: "09:00"
+
+# Logging
+log_level: "info"  # "debug", "info", "warn", "error"
+mail_log: []

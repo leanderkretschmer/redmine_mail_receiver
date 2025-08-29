@@ -1,0 +1,13 @@
+# Plugin-spezifische Konfigurationsdatei
+config/settings.yml
+
+# Log-Dateien
+*.log
+
+# Temporäre Dateien
+*.tmp
+*.temp
+
+# OS-spezifische Dateien
+.DS_Store
+Thumbs.db
