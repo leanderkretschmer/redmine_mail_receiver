@@ -22,6 +22,26 @@
 </fieldset>
 
 <fieldset>
+  <legend><%= l('mail_receiver.settings.manual_import') %></legend>
+  <table class="form">
+    <tr><th><%= l('mail_receiver.settings.import_format') %></th><td><%= select_tag 'settings[import_format]', options_for_select([['Plain Text','plain_text'],['Raw MIME','raw_mime']], @settings['import_format']), class: 'import-format-select' %></td></tr>
+    <tr><th><%= l('mail_receiver.settings.manual_import_count') %></th><td><%= text_field_tag 'settings[manual_import_count]', @settings['manual_import_count'] %></td></tr>
+    <tr>
+      <th><%= l('mail_receiver.settings.manual_import_action') %></th>
+      <td>
+        <%= form_tag manual_import_mail_receiver_settings_path, method: :post, class: 'manual-import-form' do %>
+          <%= number_field_tag :import_count, @settings['manual_import_count'], min: 1, max: 100 %>
+          <%= submit_tag l('mail_receiver.settings.import_button'), class: 'button-positive' %>
+        <% end %>
+        <span class="import-help-text">
+          <%= l('mail_receiver.settings.import_help') %>
+        </span>
+      </td>
+    </tr>
+  </table>
+</fieldset>
+
+<fieldset>
   <legend><%= l('mail_receiver.settings.reminder_mails') %></legend>
   <table class="form">
     <tr><th><%= l('mail_receiver.settings.reminder_enabled') %></th><td><%= check_box_tag 'settings[reminder_enabled]', 'true', @settings['reminder_enabled'] == 'true' %></td></tr>
@@ -31,13 +51,26 @@
 
 <fieldset>
   <legend><%= l('mail_receiver.settings.mail_log') %></legend>
-  <div style="background:#f9f9f9; border:1px solid #ccc; padding:5px; max-height:200px; overflow:auto;">
-    <% if (@settings['mail_log'] || []).empty? %>
-      <div><%= l('mail_receiver.settings.log_empty') %></div>
-    <% else %>
-      <% (@settings['mail_log'] || []).reverse.each do |line| %>
-        <div><%= line %></div>
+  <table class="form">
+    <tr><th><%= l('mail_receiver.settings.log_level') %></th><td><%= select_tag 'settings[log_level]', options_for_select([['Debug','debug'],['Info','info'],['Warn','warn'],['Error','error']], @settings['log_level']), class: 'log-level-select' %></td></tr>
+  </table>
+      <div class="mail-receiver-log">
+      <% if (@settings['mail_log'] || []).empty? %>
+        <div><%= l('mail_receiver.settings.log_empty') %></div>
+      <% else %>
+        <% (@settings['mail_log'] || []).reverse.each do |line| %>
+          <% css_class = case line
+             when /\[ERROR\]/ then 'log-error'
+             when /\[WARN\]/ then 'log-warn'
+             when /\[INFO\]/ then 'log-info'
+             when /\[DEBUG\]/ then 'log-debug'
+             else ''
+             end %>
+          <div class="<%= css_class %>"><%= line %></div>
+        <% end %>
       <% end %>
-    <% end %>
-  </div>
+    </div>
+    <div class="clear-log-button">
+      <%= link_to l('mail_receiver.settings.clear_log'), clear_log_mail_receiver_settings_path, method: :post, class: 'button', confirm: l('mail_receiver.settings.clear_log_confirm') %>
+    </div>
 </fieldset>

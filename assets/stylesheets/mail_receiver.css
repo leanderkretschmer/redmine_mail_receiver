@@ -1,0 +1,62 @@
+/* Mail Receiver Plugin Styles */
+
+.mail-receiver-log {
+  background: #f9f9f9;
+  border: 1px solid #ccc;
+  padding: 10px;
+  max-height: 300px;
+  overflow: auto;
+  margin-top: 10px;
+  font-family: 'Courier New', monospace;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.mail-receiver-log div {
+  margin-bottom: 2px;
+  padding: 1px 0;
+}
+
+.mail-receiver-log .log-info {
+  color: #0066cc;
+}
+
+.mail-receiver-log .log-warn {
+  color: #cc6600;
+}
+
+.mail-receiver-log .log-error {
+  color: #cc0000;
+}
+
+.mail-receiver-log .log-debug {
+  color: #666666;
+}
+
+.manual-import-form {
+  display: inline-block;
+  margin-right: 10px;
+}
+
+.manual-import-form input[type="number"] {
+  width: 80px;
+  margin-right: 5px;
+}
+
+.import-help-text {
+  color: #666;
+  font-style: italic;
+  margin-left: 10px;
+}
+
+.clear-log-button {
+  margin-top: 10px;
+}
+
+.log-level-select {
+  width: 120px;
+}
+
+.import-format-select {
+  width: 150px;
+}
