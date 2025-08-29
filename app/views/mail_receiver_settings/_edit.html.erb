@@ -1,6 +1,6 @@
 <% 
 # Lokalisierungen direkt definieren
-translations = {
+TRANSLATIONS = {
   'incoming_mails' => 'Eingehende Mails',
   'imap_host' => 'IMAP-Host',
   'imap_port' => 'IMAP-Port',
@@ -28,49 +28,45 @@ translations = {
   'clear_log' => 'Log leeren',
   'clear_log_confirm' => 'Sind Sie sicher, dass Sie das Mail-Log leeren möchten?'
 }
-
-def t(key)
-  translations[key] || key
-end
 %>
 
-<h2><%= t('incoming_mails') %></h2>
+<h2><%= TRANSLATIONS['incoming_mails'] %></h2>
 
 <fieldset>
-  <legend><%= t('incoming_mails') %></legend>
+  <legend><%= TRANSLATIONS['incoming_mails'] %></legend>
   <table class="form">
-    <tr><th><%= t('imap_host') %></th><td><%= text_field_tag 'settings[imap_host]', @settings['imap_host'] %></td></tr>
-    <tr><th><%= t('imap_port') %></th><td><%= text_field_tag 'settings[imap_port]', @settings['imap_port'] %></td></tr>
-    <tr><th><%= t('imap_ssl') %></th><td><%= select_tag 'settings[imap_ssl]', options_for_select([['Ja','true'],['Nein','false']], @settings['imap_ssl']) %></td></tr>
-    <tr><th><%= t('imap_user') %></th><td><%= text_field_tag 'settings[imap_user]', @settings['imap_user'] %></td></tr>
-    <tr><th><%= t('imap_password') %></th><td><%= password_field_tag 'settings[imap_password]', @settings['imap_password'] %></td></tr>
-    <tr><th><%= t('interval_seconds') %></th><td><%= text_field_tag 'settings[interval_seconds]', @settings['interval_seconds'] %></td></tr>
-    <tr><th><%= t('default_project') %></th><td><%= text_field_tag 'settings[default_project]', @settings['default_project'] %></td></tr>
+    <tr><th><%= TRANSLATIONS['imap_host'] %></th><td><%= text_field_tag 'settings[imap_host]', @settings['imap_host'] %></td></tr>
+    <tr><th><%= TRANSLATIONS['imap_port'] %></th><td><%= text_field_tag 'settings[imap_port]', @settings['imap_port'] %></td></tr>
+    <tr><th><%= TRANSLATIONS['imap_ssl'] %></th><td><%= select_tag 'settings[imap_ssl]', options_for_select([['Ja','true'],['Nein','false']], @settings['imap_ssl']) %></td></tr>
+    <tr><th><%= TRANSLATIONS['imap_user'] %></th><td><%= text_field_tag 'settings[imap_user]', @settings['imap_user'] %></td></tr>
+    <tr><th><%= TRANSLATIONS['imap_password'] %></th><td><%= password_field_tag 'settings[imap_password]', @settings['imap_password'] %></td></tr>
+    <tr><th><%= TRANSLATIONS['interval_seconds'] %></th><td><%= text_field_tag 'settings[interval_seconds]', @settings['interval_seconds'] %></td></tr>
+    <tr><th><%= TRANSLATIONS['default_project'] %></th><td><%= text_field_tag 'settings[default_project]', @settings['default_project'] %></td></tr>
     <tr>
-      <th><%= t('no_ticket_mode') %></th>
+      <th><%= TRANSLATIONS['no_ticket_mode'] %></th>
       <td>
-        <%= radio_button_tag 'settings[no_ticket_mode]', 'comment', @settings['no_ticket_mode'] == 'comment' %> <%= t('no_ticket_comment') %>
-        <%= text_field_tag 'settings[fallback_issue_id]', @settings['fallback_issue_id'], placeholder: t('fallback_issue_id') %><br>
-        <%= radio_button_tag 'settings[no_ticket_mode]', 'new_ticket', @settings['no_ticket_mode'] == 'new_ticket' %> <%= t('no_ticket_new') %>
+        <%= radio_button_tag 'settings[no_ticket_mode]', 'comment', @settings['no_ticket_mode'] == 'comment' %> <%= TRANSLATIONS['no_ticket_comment'] %>
+        <%= text_field_tag 'settings[fallback_issue_id]', @settings['fallback_issue_id'], placeholder: TRANSLATIONS['fallback_issue_id'] %><br>
+        <%= radio_button_tag 'settings[no_ticket_mode]', 'new_ticket', @settings['no_ticket_mode'] == 'new_ticket' %> <%= TRANSLATIONS['no_ticket_new'] %>
       </td>
     </tr>
   </table>
 </fieldset>
 
 <fieldset>
-  <legend><%= t('manual_import') %></legend>
+  <legend><%= TRANSLATIONS['manual_import'] %></legend>
   <table class="form">
-    <tr><th><%= t('import_format') %></th><td><%= select_tag 'settings[import_format]', options_for_select([['Plain Text','plain_text'],['Raw MIME','raw_mime']], @settings['import_format']), class: 'import-format-select' %></td></tr>
-    <tr><th><%= t('manual_import_count') %></th><td><%= text_field_tag 'settings[manual_import_count]', @settings['manual_import_count'] %></td></tr>
+    <tr><th><%= TRANSLATIONS['import_format'] %></th><td><%= select_tag 'settings[import_format]', options_for_select([['Plain Text','plain_text'],['Raw MIME','raw_mime']], @settings['import_format']), class: 'import-format-select' %></td></tr>
+    <tr><th><%= TRANSLATIONS['manual_import_count'] %></th><td><%= text_field_tag 'settings[manual_import_count]', @settings['manual_import_count'] %></td></tr>
     <tr>
-      <th><%= t('manual_import_action') %></th>
+      <th><%= TRANSLATIONS['manual_import_action'] %></th>
       <td>
         <div class="manual-import-form">
           <%= number_field_tag :import_count, @settings['manual_import_count'], min: 1, max: 100 %>
-          <button type="button" onclick="performManualImport()" class="button-positive"><%= t('import_button') %></button>
+          <button type="button" onclick="performManualImport()" class="button-positive"><%= TRANSLATIONS['import_button'] %></button>
         </div>
         <span class="import-help-text">
-          <%= t('import_help') %>
+          <%= TRANSLATIONS['import_help'] %>
         </span>
       </td>
     </tr>
@@ -78,21 +74,21 @@ end
 </fieldset>
 
 <fieldset>
-  <legend><%= t('reminder_mails') %></legend>
+  <legend><%= TRANSLATIONS['reminder_mails'] %></legend>
   <table class="form">
-    <tr><th><%= t('reminder_enabled') %></th><td><%= check_box_tag 'settings[reminder_enabled]', 'true', @settings['reminder_enabled'] == 'true' %></td></tr>
-    <tr><th><%= t('reminder_time') %></th><td><%= text_field_tag 'settings[reminder_time]', @settings['reminder_time'] %></td></tr>
+    <tr><th><%= TRANSLATIONS['reminder_enabled'] %></th><td><%= check_box_tag 'settings[reminder_enabled]', 'true', @settings['reminder_enabled'] == 'true' %></td></tr>
+    <tr><th><%= TRANSLATIONS['reminder_time'] %></th><td><%= text_field_tag 'settings[reminder_time]', @settings['reminder_time'] %></td></tr>
   </table>
 </fieldset>
 
 <fieldset>
-  <legend><%= t('mail_log') %></legend>
+  <legend><%= TRANSLATIONS['mail_log'] %></legend>
   <table class="form">
-    <tr><th><%= t('log_level') %></th><td><%= select_tag 'settings[log_level]', options_for_select([['Debug','debug'],['Info','info'],['Warn','warn'],['Error','error']], @settings['log_level']), class: 'log-level-select' %></td></tr>
+    <tr><th><%= TRANSLATIONS['log_level'] %></th><td><%= select_tag 'settings[log_level]', options_for_select([['Debug','debug'],['Info','info'],['Warn','warn'],['Error','error']], @settings['log_level']), class: 'log-level-select' %></td></tr>
   </table>
   <div class="mail-receiver-log">
     <% if (@settings['mail_log'] || []).empty? %>
-      <div><%= t('log_empty') %></div>
+      <div><%= TRANSLATIONS['log_empty'] %></div>
     <% else %>
       <% (@settings['mail_log'] || []).reverse.each do |line| %>
         <% css_class = case line
@@ -107,7 +103,7 @@ end
     <% end %>
   </div>
   <div class="clear-log-button">
-    <button type="button" onclick="clearLog()" class="button"><%= t('clear_log') %></button>
+    <button type="button" onclick="clearLog()" class="button"><%= TRANSLATIONS['clear_log'] %></button>
   </div>
 </fieldset>
 
@@ -127,7 +123,7 @@ function performManualImport() {
 }
 
 function clearLog() {
-  if (confirm('<%= t('clear_log_confirm') %>')) {
+  if (confirm('<%= TRANSLATIONS['clear_log_confirm'] %>')) {
     // Hier würde normalerweise ein AJAX-Call stehen
     // Für jetzt zeigen wir nur eine Bestätigung
     alert('Log wurde geleert.');
